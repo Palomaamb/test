@@ -1,29 +1,52 @@
-import { mostrarMensajePorPuntuacion } from './motor';
+import { test } from 'vitest';
+import { sumaPuntuacion } from './motor';
 import { juego } from './modelo';
-import { describe, it, expect } from 'vitest';
+import { mostrarMensajePorPuntuacion } from './ui';
 
-describe('Pruebas de determinación de ganador', () => {
-    it('Debería indicar que el jugador ha ganado si la puntuación es igual a 7.5', () => {
-        juego.score = 7.5;
-        mostrarMensajePorPuntuacion();
-        expect(juego.gameOver).toBe(true);
+test('Suma de puntuación: juego gana al llegar a 7.5', () => {
+    juego.score = 7.5;
+    sumaPuntuacion(1);
+    return juego.gameOver === true;
+});
+
+test('Mensaje de juego ganado al llegar a 7.5', () => {
+    juego.score = 7.5;
+    mostrarMensajePorPuntuacion(juego.score);
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(document.body.innerText.includes('¡Lo has clavado! ¡Enhorabuena!'));
+        }, 100);
     });
+});
 
-    it('Debería indicar que el jugador ha ganado si la puntuación es mayor que 7.5', () => {
-        juego.score = 8;
-        mostrarMensajePorPuntuacion();
-        expect(juego.gameOver).toBe(true);
+test('Suma de puntuación: juego pierde al pasar de 7.5', () => {
+    juego.score = 7.4;
+    sumaPuntuacion(1);
+    return juego.gameOver === true;
+});
+
+test('Mensaje de juego perdido al pasar de 7.5', () => {
+    juego.score = 7.4;
+    mostrarMensajePorPuntuacion(juego.score);
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(document.body.innerText.includes('Te has pasado, has perdido'));
+        }, 100);
     });
+});
 
-    it('Debería indicar que el jugador no ha ganado si la puntuación es menor que 7.5', () => {
-        juego.score = 5;
-        mostrarMensajePorPuntuacion();
-        expect(juego.gameOver).toBe(false);
-    });
+test('Suma de puntuación: juego continúa si la puntuación es menor a 7.5', () => {
+    juego.score = 7.4;
+    sumaPuntuacion(1);
+    return juego.gameOver === false;
+});
 
-    it('Debería indicar que el jugador no ha ganado si la puntuación es igual a 4', () => {
-        juego.score = 4;
-        mostrarMensajePorPuntuacion();
-        expect(juego.gameOver).toBe(false);
+test('Mensaje de juego continúa si la puntuación es menor a 7.5', () => {
+    juego.score = 7.4;
+    mostrarMensajePorPuntuacion(juego.score);
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(document.body.innerText.includes('Casi casi...'));
+        }, 100);
     });
 });

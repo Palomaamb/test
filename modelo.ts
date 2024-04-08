@@ -1,11 +1,9 @@
-export const juego = {
+export interface Juego {
+    score: number;
+    gameOver: boolean;
+};
+
+export const juego: Juego = {
     score: 0,
     gameOver: false
 };
-
-export function muestraPuntuacion(): void {
-    const scoreElement = document.getElementById('score');
-    if (scoreElement) {
-        scoreElement.innerText = `Puntuación: ${juego.score}`;
-    }
-}
